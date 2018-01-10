@@ -9,7 +9,9 @@ import {
 } from '@microsoft/sp-listview-extensibility';
 
 import * as strings from 'OotbFieldsFieldCustomizerStrings';
-import OotbFields, { IOotbFieldsProps } from './components/OotbFields';
+import OotbFields, { IOotbFieldsProps } from './components/Customizer/OotbFields';
+import { SPHelper } from './utilities/SPHelper';
+import { Promise } from 'es6-promise';
 
 /**
  * If your field customizer uses the ClientSideComponentProperties JSON input,
@@ -17,8 +19,6 @@ import OotbFields, { IOotbFieldsProps } from './components/OotbFields';
  * You can define an interface to describe it.
  */
 export interface IOotbFieldsFieldCustomizerProperties {
-  // This is an example; replace with your own property
-  sampleText?: string;
 }
 
 const LOG_SOURCE: string = 'OotbFieldsFieldCustomizer';
@@ -31,18 +31,29 @@ export default class OotbFieldsFieldCustomizer
     // Add your custom initialization to this method.  The framework will wait
     // for the returned promise to resolve before firing any BaseFieldCustomizer events.
     Log.info(LOG_SOURCE, 'Activated OotbFieldsFieldCustomizer with properties:');
-    Log.info(LOG_SOURCE, JSON.stringify(this.properties, undefined, 2));
-    Log.info(LOG_SOURCE, `The following string should be equal: "OotbFieldsFieldCustomizer" and "${strings.Title}"`);
-    return Promise.resolve();
+    return new Promise<void>(resolve => {
+      // getting regional settings
+      SPHelper.getWebRegionalSettingsAsync(this.context).then(() => {
+        resolve();
+      });
+    });
   }
 
   @override
   public onRenderCell(event: IFieldCustomizerCellEventParameters): void {
-    // Use this method to perform your custom cell rendering.
-    const text: string = `${this.properties.sampleText}: ${event.fieldValue}`;
+    const fieldName: string = SPHelper.getStoredFieldName(this.context.field.internalName);
+    const text: string = SPHelper.getFieldText(event.fieldValue, event.listItem, this.context);
 
     const ootbFields: React.ReactElement<{}> =
-      React.createElement(OotbFields, { text } as IOotbFieldsProps);
+      React.createElement(OotbFields, {
+        text: text,
+        value: event.fieldValue,
+        listItem: event.listItem,
+        fieldName: fieldName,
+        context: this.context,
+        cssProps: { backgroundColor: '#f00' },
+        className: 'fake-class'
+      });
 
     ReactDOM.render(ootbFields, event.domElement);
   }

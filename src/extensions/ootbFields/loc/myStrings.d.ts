@@ -1,5 +1,9 @@
 declare interface IOotbFieldsFieldCustomizerStrings {
-  Title: string;
+  DateTime:{[key: string]: string};
+  SendEmailTo: string;
+  StartChatWith: string;
+  Contact: string;
+  UpdateProfile: string;
 }
 
 declare module 'OotbFieldsFieldCustomizerStrings' {
