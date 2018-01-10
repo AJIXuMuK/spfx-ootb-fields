@@ -10,7 +10,7 @@ import {
 
 import * as strings from 'OotbFieldsFieldCustomizerStrings';
 import OotbFields, { IOotbFieldsProps } from './components/Customizer/OotbFields';
-import { SPHelper } from './utilities/SPHelper';
+import { SPHelper } from '../../utilities/SPHelper';
 import { Promise } from 'es6-promise';
 
 /**

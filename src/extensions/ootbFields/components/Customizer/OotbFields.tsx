@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import styles from './OotbFields.module.scss';
 import { ListItemAccessor } from '@microsoft/sp-listview-extensibility';
-import { FieldRendererHelper } from '../../utilities/FieldRendererHelper';
-import { IProps } from '../../common/Interfaces';
-import { IFieldRendererProps } from '../Fields/Common/IFieldRendererProps';
+import { FieldRendererHelper } from '../../../../utilities/FieldRendererHelper';
+import { IProps } from '../../../../common/Interfaces';
+import { IFieldRendererProps } from '../../../../components/Fields/Common/IFieldRendererProps';
 
 export interface IOotbFieldsProps extends IProps, IFieldRendererProps {
   text: string;
