@@ -1,7 +1,7 @@
 {
   "name": "spfx-ootb-fields",
+  "description": "React controls that can be used in SPFx Field Customizers (or other solutions as well) to provide rendering similar to out of the box Lists and Document Libraries fields",
   "version": "1.0.0",
-  "private": true,
   "engines": {
     "node": ">=0.10.0"
   },
@@ -32,5 +32,30 @@
     "@types/chai": ">=3.4.34 <3.6.0",
     "@types/mocha": ">=2.2.33 <2.6.0",
     "ajv": "~5.2.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AJIXuMuK/spfx-ootb-fields"
+  },
+  "license": "MIT",
+  "keywords": [
+    "sharepoint",
+    "office365",
+    "tools",
+    "spfx",
+    "sharepoint framework"
+  ],
+  "bugs": {
+    "url": "https://github.com/AJIXuMuK/spfx-ootb-fields/issues"
+  },
+  "homepage": "https://github.com/AJIXuMuK/spfx-ootb-fields",
+  "maintainers": [
+    {
+      "name": "AJIXuMuK",
+      "email": "aleksei.terentiev@gmail.com"
+    }
+  ],
+  "contributors": [
+    "Terentiv, Alex <aleksei.terentiev@gmail.com>"
+  ]
 }
