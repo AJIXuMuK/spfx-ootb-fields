@@ -38,7 +38,7 @@ export default class UserHoverCard extends React.Component<IUserHoverCardProps, 
         return (
             <div className={styles.user} style={this.props.cssProps}>
                 <span ref={(c: HTMLDivElement) => !this.state.contentRendered && this.setState({ contentRendered: c })} data-is-focusable={true}>{this.props.displayName}</span>
-                {this.state.contentRendered &&
+                {this.state.contentRendered && this.props.expandingCardProps.onRenderCompactCard &&
                     <HoverCard
                         expandingCardProps={this.props.expandingCardProps}
                         target={this.state.contentRendered}

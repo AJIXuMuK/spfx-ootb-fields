@@ -184,6 +184,10 @@ export class SPHelper {
                 const titles: string[] = [];
                 const users: IPrincipal[] = <IPrincipal[]>fieldValue;
 
+                if (!users) {
+                    return '';
+                }
+
                 for (let i = 0, len = users.length; i < len; i++) {
                     titles.push(users[i].title);
                 }
@@ -191,6 +195,11 @@ export class SPHelper {
             case "Lookup":
             case "LookupMulti":
                 const lookupValues = fieldValue as ISPFieldLookupValue[];
+
+                if (!lookupValues) {
+                    return '';
+                }
+
                 const lookupTexts: string[] = [];
                 for (let i = 0, len = lookupValues.length; i < len; i++) {
                     lookupTexts.push(lookupValues[i].lookupValue);
@@ -205,6 +214,11 @@ export class SPHelper {
             case 'Taxonomy':
             case 'TaxonomyFieldType':
                 const terms: ITerm[] = Array.isArray(fieldValue) ? <ITerm[]>fieldValue : <ITerm[]>[fieldValue];
+
+                if (!terms) {
+                    return '';
+                }
+
                 const termTexts: string[] = [];
                 for (let i = 0, len = terms.length; i < len; i++) {
                     termTexts.push(terms[i].Label);
