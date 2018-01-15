@@ -1,8 +1,8 @@
 # spfx-ootb-fields
 
 This repository contains a set of React components that can be used in SPFx Field Customizers to provide rendering of the fields similar to out of the box experience. Additional benefit is ability to set custom css classes and styles to the component.
-Related UserVoice requests:
-[https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls)
+Related UserVoice requests:<br>
+[https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls)<br>
 [https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/31530607-field-customizer-ability-to-call-ootb-render-meth](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/31530607-field-customizer-ability-to-call-ootb-render-meth)
 
 ## Getting started
@@ -70,7 +70,7 @@ Here is a list of Utilities classes and public methods that are included in the 
 <tr>
 <td><code>FieldRenderer</code></td>
 <td><code>getFieldRenderer(fieldValue: any, props: IFieldRendererProps, listItem: ListItemAccessor, context: IContext): JSX.Element</code></td>
-<td>Returns <code>JSX.Element,/code> with OOTB rendering and applied additional props.<br>
+<td>Returns <code>JSX.Element</code> with OOTB rendering and applied additional props.<br>
 Parameters<br>
 <code>fieldValue</code> - Value of the field<br>
 <code>props</code> - IFieldRendererProps (CSS classes and CSS styles)<br>
@@ -150,7 +150,7 @@ Gets Field's text<br>
 Parameters<br>
 <code>fieldValue</code> - field value as it appears in Field Customizer's onRenderCell event
 <code>listItem</code> - List Item accessor
-<code>context</code -> Customizer's context
+<code>context</code> - Customizer's context
 </td>
 </tr>
 <tr>
