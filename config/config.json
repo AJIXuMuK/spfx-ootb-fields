@@ -1,0 +1,21 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "ootb-fields-field-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/ootbFields/OotbFieldsFieldCustomizer.js",
+          "manifest": "./src/extensions/ootbFields/OotbFieldsFieldCustomizer.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {
+    "moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"
+  },
+  "localizedResources": {
+    "OotbFieldsStrings": "lib/extensions/ootbFields/loc/{locale}.js",
+    "ControlStrings": "./node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+  }
+}

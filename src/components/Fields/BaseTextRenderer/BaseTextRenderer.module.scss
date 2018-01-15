@@ -1,0 +1,5 @@
+@import '../Common/FieldRenderer.module.scss';
+
+.baseText {
+    @extend .relative;
+}
