@@ -1,7 +1,7 @@
 {
   "name": "spfx-ootb-fields",
   "description": "React controls that can be used in SPFx Field Customizers (or other solutions as well) to provide rendering similar to out of the box Lists and Document Libraries fields",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "engines": {
     "node": ">=0.10.0"
   },
