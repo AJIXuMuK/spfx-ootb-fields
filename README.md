@@ -12,7 +12,7 @@ To get started you need to install this package to your project and also depende
 Enter the following commands to install dependencies to your project:
 ```
 npm i spfx-ootb-fields --save
-npm i @microsoft/sp-dialog
+npm i @microsoft/sp-dialog --save
 ```
 
 ### Configuration
