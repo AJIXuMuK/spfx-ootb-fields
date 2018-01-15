@@ -1,7 +1,9 @@
 # spfx-ootb-fields
 
 This repository contains a set of React components that can be used in SPFx Field Customizers to provide rendering of the fields similar to out of the box experience. Additional benefit is ability to set custom css classes and styles to the component.
-Related UserVoice requests:[https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls)[https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/31530607-field-customizer-ability-to-call-ootb-render-meth](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/31530607-field-customizer-ability-to-call-ootb-render-meth)
+Related UserVoice requests:
+[https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls)
+[https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/31530607-field-customizer-ability-to-call-ootb-render-meth](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/31530607-field-customizer-ability-to-call-ootb-render-meth)
 
 ## Getting started
 ### Installation
@@ -17,10 +19,6 @@ npm i @microsoft/sp-dialog
 Once the package is installed, you will have to configure the resource file of the property controls to be used in your project. You can do this by opening the `config/config.json` and adding the following line to the `localizedResources` property:
 ```
 "OotbFieldsStrings": "./node_modules/spfx-ootb-fields/lib/loc/{locale}.js"
-```
-Also, you will have to the url to load `moment.js` library from the CDN. It is done in `config/config.json` file as well by adding next line to the `externals` section:
-```
-"moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"
 ```
 
 ## Usage
@@ -39,7 +37,7 @@ public render(): React.ReactElement<{}> {
   }
 ```
 
-Additionally, any of icluded components can be used by itself.
+Additionally, any of included components can be used by itself.
 
 ## Controls
 Here is a list of the controls included in the package with a description which field types are covered with the specific control.
@@ -70,181 +68,42 @@ Here is a list of Utilities classes and public methods that are included in the 
 </thead>
 <tbody>
 <tr>
-<td>`FieldRenderer`</td>
-<td>`getFieldRenderer(fieldValue: any, props: IFieldRendererProps, listItem: ListItemAccessor, context: IContext): JSX.Element`</td>
-<td>Returns JSX.Element with OOTB rendering and applied additional props.<br>
+<td><code>FieldRenderer</code></td>
+<td><code>getFieldRenderer(fieldValue: any, props: IFieldRendererProps, listItem: ListItemAccessor, context: IContext): JSX.Element</code></td>
+<td>Returns <code>JSX.Element,/code> with OOTB rendering and applied additional props.<br>
 Parameters<br>
-`fieldValue` - Value of the field<br>
-`props` - IFieldRendererProps (CSS classes and CSS styles)<br>
-`listItem` - Current list item<br>
-`context` - Customizer's context
+<code>fieldValue</code> - Value of the field<br>
+<code>props</code> - IFieldRendererProps (CSS classes and CSS styles)<br>
+<code>listItem</code> - Current list item<br>
+<code>context</code> - Customizer's context
 </td>
 </tr>
 <tr>
-<td rowspan="19">
-`GeneralHelper`
+<td rowspan="5">
+<code>GeneralHelper</code>
 </td>
 <td>
-`trimSlash(url: string): string`
+<code>trimSlash(url: string): string</code>
 </td>
 <td>
 Trims slash at the end of URL if needed<br>
 Parameters<br>
-`url` - URL
+<code>url</code> - URL
 </td>
 </tr>
 <tr>
 <td>
-`loadJSOMScriptsInSequence(context: IContext): Promise<void>`
-</td>
-<td>
-Loads predefined JSOM scripts in correct sequence<br>
-Parameters<br>
-`context` - Customizer's context
-</td>
-</tr>
-<tr>
-<td>
-`loadScripts(context: IContext, scripts: Array<string>, fromLayouts?: boolean): Promise<void>`
-</td>
-<td>
-Loads needed scripts<br>
-Parameters<br>
-`context` - Customizer's context<br>
-`scripts` - Scripts to load<br>
-`fromLayouts` - flag if scripts should be loaded from /_layouts/15 folder
-</td>
-</tr>
-<tr>
-<td>
-`loadScript(url: string, globalObjectName?: string): Promise<void>`
-</td>
-<td>
-Loads script<br>
-Parameters<br>
-`url` - script src<br>
-`globalObjectName` - name of global object to check if it is loaded to the page
-</td>
-</tr>
-<tr>
-<td>
-`isNumeric(value: any): boolean`
-</td>
-<td>
-Checks if the value is a numeric value<br>
-Parameters</br>
-`value` - value
-</td>
-</tr>
-<tr>
-<td>
-`isValidDate(date: any): boolean`
-</td>
-<td>
-Checks if the date is a valid date<br>
-Parameters<br>
-`date` - date
-</td>
-</tr>
-<tr>
-<td>
-`getDigitTestRegExp(): RegExp`
-</td>
-<td>
-Gets Regular expression to test if value is a correct digit in current web locale
-</td>
-</tr>
-<tr>
-<td>
-`formatDigit(digit: string): string`
-</td>
-<td>
-Formats digit in current culture<br>
-Parameters<br>
-`digit` - digit string in invariant culture
-</td>
-</tr>
-<tr>
-<td>
-`getDigitSeparators(): IDigitSeparators`
-</td>
-<td>
-Gets digit separators
-</td>
-</tr>
-<tr>
-<td>
-`isCorrectLocaleDigit(digit: string): boolean`
-</td>
-<td>
-Checks if the digit string is a correct digit string in current locale<br>
-Parameters<br>
-`digit` - digit string to test
-</td>
-</tr>
-<tr>
-<td>
-`formatDate(date: Date): string`
-</td>
-<td>
-formats date based on Web Regional Settings<br>
-Parameters<br>
-`date` - date
-</td>
-</tr>
-<tr>
-<td>
-`deFormatDate(date: string): string`
-</td>
-<td>
-De-formats date string from Web Regional Settings format to MM/DD/YYYY string representation<br>
-Parameters<br>
-`date` - date string
-</td>
-</tr>
-<tr>
-<td>
-`parseDateCurrentRegionalSettings(date: string): Date`
-</td>
-<td>
-Parses date string based on current Web Regional Settings<br>
-Parameters<br>
-`date` - date string
-</td>
-</tr>
-<tr>
-<td>
-`deFormatDigit(digit: string): string`
-</td>
-<td>
-De-formats digit string from Web Regional Settings locale string to invariant culture digit string<br>
-Parameters<br>
-`digit` - digit string in Web Regional Settings locale
-</td>
-</tr>
-<tr>
-<td>
-`escapeRegExpSpecialCharacter(char: string): string`
-</td>
-<td>
-Escapes \s and \. characters<br>
-Parameters<br>
-`char` - character
-</td>
-</tr>
-<tr>
-<td>
-`encodeText(text: string): string`
+<code>encodeText(text: string): string</code>
 </td>
 <td>
 Encodes text<br>
 Parameters<br>
-`text` - text to encode
+<code>text</code> - text to encode
 </td>
 </tr>
 <tr>
 <td>
-`getRelativeDateTimeString(format: string): string`
+<code>getRelativeDateTimeString(format: string): string</code>
 </td>
 <td>
 Copy of Microsoft's GetRelativeDateTimeString from SP.dateTimeUtil
@@ -252,17 +111,115 @@ Copy of Microsoft's GetRelativeDateTimeString from SP.dateTimeUtil
 </tr>
 <tr>
 <td>
-`getLocalizedCountValue(format: string, first: string, second: number): string`
+<code>getLocalizedCountValue(format: string, first: string, second: number): string</code>
+</td>
+<td>
+Copy of Microsoft's GetLocalizedCountValue from SP.dateTimeUtil.<br>
+I've tried to rename all the vars to have meaningful names... but some were too unclear
+</td>
+</tr>
+<tr>
+<td>
+<code>getTextFromHTML(html: string): string</code>
 </td>
 <td>
 Extracts text from HTML strings without creating HTML elements<br>
 Parameters<br>
-`html` - HTML string
+<code>html</code> - HTML string
+</td>
+</tr>
+<tr>
+<td rowspan="7">
+<code>SPHelper</code>
+</td>
+<td>
+<code>getStoredFieldName(columnName: string): string</code>
+</td>
+<td>
+Gets field's Real Name from FieldNamesMapping<br>
+Parameters<br>
+<code>columnName</code> - current field name
+</td>
+</tr>
+<tr>
+<td>
+<code>getFieldText(fieldValue: any, listItem: ListItemAccessor, context: IContext): string</code>
+</td>
+<td>
+Gets Field's text<br>
+Parameters<br>
+<code>fieldValue</code> - field value as it appears in Field Customizer's onRenderCell event
+<code>listItem</code> - List Item accessor
+<code>context</code -> Customizer's context
+</td>
+</tr>
+<tr>
+<td>
+<code>getFieldNameById(fieldId: string, returnStoredName: boolean = false): string</code>
+</td>
+<td>
+Returns Field's name by its ID<br>
+Parameters<br>
+<code>fieldId</code> - Field's ID<br>
+<code>returnStoredName</code> - true if needs to return RealFieldName
+</td>
+</tr>
+<tr>
+<td>
+<code>getFieldProperty(fieldId: string, propertyName: string): any</code>
+</td>
+<td>
+Gets property of the Field by Field's ID and Property Name<br>
+Parameters<br>
+<code>fieldId</code> - Field's ID<br>
+<code>propertyName</code> - Property name<br>
+</td>
+</tr>
+<tr>
+<td>
+<code>getRowItemValueById(id: string, itemName: string): any</code>
+</td>
+<td>
+Gets column's value for the row by row's ID.<br>
+This method works with <code>g_listData</code> to be able to get such values as FriendlyDisplay text for Date, and more.<br>
+Parameters<br>
+<code>id</code> - row ID (item ID)<br>
+<code>itemName</code> - column name
+</td>
+</tr>
+<tr>
+<td>
+<code>getRowItemValueByName(listItem: ListItemAccessor, itemName: string): any</code>
+</td>
+<td>
+Gets column's value for the row using List Item Accessor.<br>
+This method works with private property <code>_values</code> of List Item Accessor to get such values as FriendlyDisplay text for Date, and more.<br>
+Parameters<br>
+<code>listItem</code> - List Item Accessor<br>
+<code>itemName<code> - column name
+</td>
+</tr>
+<tr>
+<td>
+<code>getFieldSchemaXmlByInternalNameOrTitle(fieldName: string, listTitle: string, context: IContext): Promise&lt;string&gt;</code>
+</td>
+<td>
+Gets SchemaXml for the field by List Title and Field Internal Name<br>
+Parameters<br>
+<code>fieldName</code> - Field's Internal Name<br>
+<code>listTitle</code> - List Title<br>
+<code>context</code> - Customizer's context
 </td>
 </tr>
 </tbody>
 </table>
 
+## Additional Information
+The repository also contains Field Customizer to test the functionality
 ### Debug Url
 ?loadSPFX=true&debugManifestsFile=https://localhost:4321/temp/manifests.js&fieldCustomizers={"Percent":{"id":"57ebd944-98ed-43f9-b722-e959d6dac6ad"}}
+
+## Contribution
+Please, feel free to report any bugs or improvements for the repo.
+If you're going to add a PR please, reference dev branch instead of master.
 

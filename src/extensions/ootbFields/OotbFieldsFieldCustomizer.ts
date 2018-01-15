@@ -31,12 +31,7 @@ export default class OotbFieldsFieldCustomizer
     // Add your custom initialization to this method.  The framework will wait
     // for the returned promise to resolve before firing any BaseFieldCustomizer events.
     Log.info(LOG_SOURCE, 'Activated OotbFieldsFieldCustomizer with properties:');
-    return new Promise<void>(resolve => {
-      // getting regional settings
-      SPHelper.getWebRegionalSettingsAsync(this.context).then(() => {
-        resolve();
-      });
-    });
+    return Promise.resolve();
   }
 
   @override

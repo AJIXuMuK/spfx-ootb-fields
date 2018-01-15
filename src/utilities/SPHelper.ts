@@ -29,130 +29,6 @@ export class SPHelper {
     }
 
     /**
-     * Returns cached regional settings.
-     * This method must be used after getWebRegionalSettingsAsync is called
-     */
-    public static getWebRegionalSettings(): IRegionalSettings {
-        if (this._regionalSettings) {
-            return this._regionalSettings;
-        }
-
-        return {
-            decimalSeparator: '.',
-            thousandSeparator: ',',
-            hoursOffset: 0,
-            webDateFormat: 'MM/DD/YYYY',
-            workDays: 62,
-            firstDayOfWeek: 0,
-            firstWeekOfYear: 0
-        };
-    }
-
-    /**
-     * Gets Web Regional Settings to be used in the application
-     * @param context current context
-     */
-    public static getWebRegionalSettingsAsync(context: IContext): Promise<IRegionalSettings> {
-
-        return new Promise<IRegionalSettings>((resolve) => {
-            if (!this._isInitialized) {
-                this.initialize();
-            }
-
-            if (this._regionalSettings) {
-                resolve(this._regionalSettings);
-                return;
-            }
-
-            GeneralHelper.loadJSOMScriptsInSequence(context)
-                .then(() => {
-                    const ctx = SP.ClientContext.get_current();
-                    const web = ctx.get_web();
-                    let regSettings = web.get_regionalSettings();
-                    let dateString = SP.Utilities.Utility.formatDateTime(ctx, web, new Date(1999, 3, 6), SP.Utilities.DateTimeFormat.dateOnly);
-                    const serverTZ = regSettings.get_timeZone();
-                    const currDate = new Date();
-
-                    currDate.setHours(currDate.getUTCHours());
-                    var serverCurrDateResult = serverTZ.utcToLocalTime(currDate);
-                    ctx.load(regSettings);
-
-                    ctx.executeQueryAsync(() => {
-                        const currTimeZoneHours: number = currDate.getHours();
-                        const currTimeZoneDate: number = currDate.getDate();
-                        const serverCurrDate: Date = serverCurrDateResult.get_value();
-                        const serverTimeZoneDate: number = serverCurrDate.getDate();
-                        const serverTimeZoneHours: number = serverCurrDate.getHours();
-                        let hoursOffset: number = 0;
-
-                        if (serverTimeZoneDate == currTimeZoneDate)
-                            hoursOffset = serverTimeZoneHours - currTimeZoneHours;
-                        else if (serverTimeZoneDate < currTimeZoneDate)
-                            hoursOffset = serverTimeZoneHours - 24 - currTimeZoneHours;
-                        else
-                            hoursOffset = serverTimeZoneHours + 24 - currTimeZoneHours;
-
-
-                        SPHelper._regionalSettings = {
-                            decimalSeparator: regSettings.get_decimalSeparator(),
-                            thousandSeparator: regSettings.get_thousandSeparator(),
-                            hoursOffset: hoursOffset,
-                            webDateFormat: SPHelper._getWebDateFormat(dateString.m_value),
-                            workDays: regSettings.get_workDays(),
-                            firstDayOfWeek: regSettings.get_firstDayOfWeek(),
-                            firstWeekOfYear: regSettings.get_firstWeekOfYear()
-                        };
-
-                        window.sessionStorage.setItem(Constants.RegionalSettingsKey, JSON.stringify(SPHelper._regionalSettings));
-
-                        resolve(SPHelper._regionalSettings);
-
-                    }, () => {
-                        SPHelper._regionalSettings = {
-                            decimalSeparator: '.',
-                            thousandSeparator: ',',
-                            hoursOffset: 0,
-                            webDateFormat: 'MM/DD/YYYY',
-                            workDays: 62,
-                            firstDayOfWeek: 0,
-                            firstWeekOfYear: 0
-                        };
-
-                        window.sessionStorage.setItem(Constants.RegionalSettingsKey, JSON.stringify(SPHelper._regionalSettings));
-
-                        resolve(SPHelper._regionalSettings);
-                    });
-                });
-        });
-    }
-
-    /**
-     * Initializes the class
-     */
-    public static initialize(): void {
-        if (this._isInitialized) {
-            return;
-        }
-
-        const sessionStorage: any = window.sessionStorage;
-
-        const loadedRegionalSettingsString: string = sessionStorage.getItem(Constants.RegionalSettingsKey);
-        if (loadedRegionalSettingsString) {
-            this._regionalSettings = <IRegionalSettings>JSON.parse(loadedRegionalSettingsString);
-        }
-
-        this._isInitialized = true;
-    }
-
-    /**
-     * Clears Session storage from added values
-     */
-    public static dispose(): void {
-        const sessionStorage: any = window.sessionStorage;
-        sessionStorage.removeItem(Constants.RegionalSettingsKey);
-    }
-
-    /**
      * Gets Field's text
      * @param fieldValue field value as it appears in Field Customizer's onRenderCell event
      * @param listItem List Item accessor
@@ -235,37 +111,6 @@ export class SPHelper {
             default:
                 return strFieldValue;
         }
-    }
-
-    /**
-     * Gets Field's value
-     * @param fieldValue field value as it appears in Field Customizer's onRenderCell event
-     * @param listItem List Item accessor
-     * @param context Customizer's context
-     */
-    public static getFieldValue(fieldValue: any, listItem: ListItemAccessor, context: IContext): any {
-        const field: SPField = context.field;
-
-        if (!field) {
-            return '';
-        }
-
-        const fieldName: string = this.getFieldNameById(field.id.toString());
-        const fieldType: string = field.fieldType;
-        const strFieldValue: string = fieldValue ? fieldValue.toString() : '';
-
-        switch (fieldType) {
-            case 'DateTime':
-                return GeneralHelper.parseDateCurrentRegionalSettings(strFieldValue);
-            case 'Integer':
-            case 'Counter':
-            case 'Number':
-            case 'Currency':
-                return parseFloat(SPHelper.getRowItemValueByName(listItem, `${fieldName}.`) || fieldValue);
-            default:
-                return fieldValue;
-        }
-
     }
 
     /**
@@ -360,16 +205,5 @@ export class SPHelper {
                     resolve(result ? result.SchemaXml : '');
                 });
         });
-    }
-
-    /**
-     * Parses the string representation of predefined date to get date format
-     * @param dateString string representation of April, 6 1999
-     */
-    private static _getWebDateFormat(dateString: string): string {
-        let format: string = dateString.toString();
-        format = format.replace(/9/gmi, 'Y').replace('1', 'Y').replace('04', 'MM').replace('4', 'M').replace(/\d/gmi, 'D');
-
-        return format;
     }
 }
