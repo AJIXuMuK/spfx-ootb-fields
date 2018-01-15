@@ -1,4 +1,4 @@
-declare interface IOotbFieldsFieldCustomizerStrings {
+declare interface IOotbFieldsStrings {
   DateTime:{[key: string]: string};
   SendEmailTo: string;
   StartChatWith: string;
@@ -6,7 +6,7 @@ declare interface IOotbFieldsFieldCustomizerStrings {
   UpdateProfile: string;
 }
 
-declare module 'OotbFieldsFieldCustomizerStrings' {
-  const strings: IOotbFieldsFieldCustomizerStrings;
+declare module 'OotbFieldsStrings' {
+  const strings: IOotbFieldsStrings;
   export = strings;
 }

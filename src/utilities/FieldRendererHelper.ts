@@ -45,6 +45,13 @@ export class FieldRendererHelper {
             case 'Choice':
             case 'Boolean':
             case 'MultiChoice':
+                result = React.createElement(TextRenderer, {
+                    text: fieldValueAsEncodedText,
+                    isSafeForInnerHTML: false,
+                    isTruncated: false,
+                    ...props
+                });
+                break;
             case 'Computed':
                 const fieldStoredName: string = SPHelper.getStoredFieldName(fieldName);
                 if (fieldStoredName === 'Title') {

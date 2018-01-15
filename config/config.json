@@ -15,7 +15,7 @@
     "moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"
   },
   "localizedResources": {
-    "OotbFieldsFieldCustomizerStrings": "lib/extensions/ootbFields/loc/{locale}.js",
+    "OotbFieldsStrings": "lib/extensions/ootbFields/loc/{locale}.js",
     "ControlStrings": "./node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
   }
 }

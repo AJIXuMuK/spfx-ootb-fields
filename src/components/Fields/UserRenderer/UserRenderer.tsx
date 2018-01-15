@@ -13,7 +13,7 @@ import { GeneralHelper } from '../../../utilities/GeneralHelper';
 import { SPHttpClient } from '@microsoft/sp-http';
 import UserHoverCard, { IUserHoverCardProps } from './UserHoverCard';
 
-import * as strings from 'OotbFieldsFieldCustomizerStrings';
+import * as strings from 'OotbFieldsStrings';
 
 export interface IUserRendererProps extends IFieldRendererProps {
     /**

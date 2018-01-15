@@ -4,7 +4,7 @@ import '../common/Extensions/String.extensions';
 
 import * as _ from 'lodash';
 
-import * as strings from 'OotbFieldsFieldCustomizerStrings';
+import * as strings from 'OotbFieldsStrings';
 
 var moment: any = require('moment');
 
@@ -135,7 +135,6 @@ export class GeneralHelper {
 
     /**
      * Gets Regular expression to test if value is a correct digit in current web locale
-     * @param context SPFx context
      */
     public static getDigitTestRegExp(): RegExp {
         const regSettings: IRegionalSettings = SPHelper.getWebRegionalSettings();
@@ -194,8 +193,8 @@ export class GeneralHelper {
     }
 
     /**
-     * 
-     * @param date formats date based on Web Regional Settings
+     * formats date based on Web Regional Settings
+     * @param date date
      */
     public static formatDate(date: Date): string {
         const regSettings: IRegionalSettings = SPHelper.getWebRegionalSettings();

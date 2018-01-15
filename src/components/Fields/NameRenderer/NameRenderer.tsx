@@ -14,7 +14,7 @@ export interface INameRendererProps extends IFieldRendererProps {
     /**
      * text to display
      */
-    text: string;
+    text?: string;
     /**
      * if the Name should be rendered as link
      */
