@@ -1,9 +1,10 @@
 import { ICultureInfo } from './SPEntities';
 
 /**
- * Key that is used to store regional settings in SessionStorage
+ * Key that is used to store loaded fields in sessionStorage
  */
-export const RegionalSettingsKey: string = 'LBRegionalSettings';
+export const LoadedViewFieldsKey: string = 'LBLoadedViewFields';
+
 
 /**
  * Mapping between current field name and the name of the real field that contains the data

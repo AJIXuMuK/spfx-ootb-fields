@@ -1,6 +1,7 @@
 import { SPHttpClient } from '@microsoft/sp-http';
 import { PageContext, SPField } from '@microsoft/sp-page-context';
 import { ListViewAccessor } from "@microsoft/sp-listview-extensibility";
+import { ISPField } from './SPEntities';
 
 /**
  * Customizer context interface.
@@ -14,17 +15,10 @@ export interface IContext {
 }
 
 /**
- * Custom interface for web regional settings.
- * It contains some additional information like timezone offset and date format
+ * Interface that represents dictionary of fields
  */
-export interface IRegionalSettings {
-    thousandSeparator: string;
-    decimalSeparator: string;
-    hoursOffset: number;
-    webDateFormat: string;
-    workDays: number;
-    firstDayOfWeek: number;
-    firstWeekOfYear: number;
+export interface IFields {
+    [id: string]: ISPField;
 }
 
 /**
@@ -32,12 +26,4 @@ export interface IRegionalSettings {
  */
 export interface IProps {
     context: IContext;
-}
-
-/**
- * Digit separators interface
- */
-export interface IDigitSeparators {
-    thousand: string;
-    decimal: string;
 }
