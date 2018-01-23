@@ -227,7 +227,7 @@ The repository also contains Field Customizer to test the functionality
 | Version | Description |
 | ------- | ----------- |
 | 1.0.4 | First stable release with all needed functionality |
-| 1.1.0 | `window.g_listData` reference is completely removed<br>`getFieldSchemaXmlByTitleOrInternalName` is replaced with `getFieldSchemaXmlById`<br>`FieldRenderer.getFieldRenderer` is now asynchronous and shouldn't be called in `render` method of Field Customizer |
+| 1.1.0 | `window.g_listData` reference is completely removed<br>`SPHelper.getFieldSchemaXmlByTitleOrInternalName` is replaced with `SPHelper.getFieldSchemaXmlById`<br>`FieldRenderer.getFieldRenderer` is now asynchronous and shouldn't be called in `render` method of Field Customizer |
 
 ## Contribution
 Please, feel free to report any bugs or improvements for the repo.
