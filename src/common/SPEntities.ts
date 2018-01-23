@@ -1,4 +1,14 @@
 /**
+ * Represents SP Field
+ */
+export interface ISPField {
+    Id: string;
+    Format?: string;
+    RichText?: boolean;
+    SchemaXml?: string;
+}
+
+/**
  * Represents value of Lookup Field (single lookup)
  */
 export interface ISPFieldLookupValue {

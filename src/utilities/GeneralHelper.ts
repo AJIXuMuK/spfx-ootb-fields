@@ -1,4 +1,4 @@
-import { IContext, IRegionalSettings, IDigitSeparators } from '../common/Interfaces';
+import { IContext } from '../common/Interfaces';
 import { SPHelper } from './SPHelper';
 import '../common/Extensions/String.extensions';
 
@@ -199,6 +199,14 @@ export class GeneralHelper {
         } while (result !== result);
 
         return result;
+    }
+
+    /**
+     * Checks if value is defined (not null and not undefined)
+     * @param value value
+     */
+    public static isDefined(value): boolean {
+        return value != null;
     }
 
     private static _getEncodedChar(c): string {

@@ -12,6 +12,7 @@ import * as strings from 'OotbFieldsStrings';
 import OotbFields, { IOotbFieldsProps } from './components/Customizer/OotbFields';
 import { SPHelper } from '../../utilities/SPHelper';
 import { Promise } from 'es6-promise';
+import { GeneralHelper } from '../../utilities/GeneralHelper';
 
 /**
  * If your field customizer uses the ClientSideComponentProperties JSON input,
@@ -36,21 +37,24 @@ export default class OotbFieldsFieldCustomizer
 
   @override
   public onRenderCell(event: IFieldCustomizerCellEventParameters): void {
+    if (!GeneralHelper.isDefined(event.fieldValue)) {
+      return;
+    }
     const fieldName: string = SPHelper.getStoredFieldName(this.context.field.internalName);
-    const text: string = SPHelper.getFieldText(event.fieldValue, event.listItem, this.context);
+    SPHelper.getFieldText(event.fieldValue, event.listItem, this.context).then(text => {
+      const ootbFields: React.ReactElement<{}> =
+        React.createElement(OotbFields, {
+          text: text,
+          value: event.fieldValue,
+          listItem: event.listItem,
+          fieldName: fieldName,
+          context: this.context,
+          cssProps: { backgroundColor: '#f00' },
+          className: 'fake-class'
+        });
 
-    const ootbFields: React.ReactElement<{}> =
-      React.createElement(OotbFields, {
-        text: text,
-        value: event.fieldValue,
-        listItem: event.listItem,
-        fieldName: fieldName,
-        context: this.context,
-        cssProps: { backgroundColor: '#f00' },
-        className: 'fake-class'
-      });
-
-    ReactDOM.render(ootbFields, event.domElement);
+      ReactDOM.render(ootbFields, event.domElement);
+    });
   }
 
   @override

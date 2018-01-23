@@ -15,12 +15,34 @@ export interface IOotbFieldsProps extends IProps, IFieldRendererProps {
   fieldName: string;
 }
 
+export interface IOotbFieldsState {
+  fieldRenderer?: JSX.Element;
+}
+
 const LOG_SOURCE: string = 'OotbFields';
 
 /**
  * Field Customizer control to test fields' controls
  */
-export default class OotbFields extends React.Component<IOotbFieldsProps, {}> {
+export default class OotbFields extends React.Component<IOotbFieldsProps, IOotbFieldsState> {
+  public constructor(props: IOotbFieldsProps, state: IOotbFieldsState) {
+    super(props, state);
+
+    this.state = {};
+  }
+
+  @override
+  public componentWillMount() {
+    FieldRendererHelper.getFieldRenderer(this.props.value, {
+      className: this.props.className,
+      cssProps: this.props.cssProps
+    }, this.props.listItem, this.props.context).then(fieldRenderer => {
+      this.setState({
+        fieldRenderer: fieldRenderer
+      });
+    });
+  }
+
   @override
   public componentDidMount(): void {
     Log.info(LOG_SOURCE, 'React Element: OotbFields mounted');
@@ -35,10 +57,7 @@ export default class OotbFields extends React.Component<IOotbFieldsProps, {}> {
   public render(): React.ReactElement<{}> {
     return (
       <div className={styles.cell}>
-        {FieldRendererHelper.getFieldRenderer(this.props.value, {
-          className: this.props.className,
-          cssProps: this.props.cssProps
-        }, this.props.listItem, this.props.context)}
+        {this.state.fieldRenderer}
       </div>
     );
   }
