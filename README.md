@@ -22,16 +22,32 @@ Once the package is installed, you will have to configure the resource file of t
 ```
 
 ## Usage
-The main scenario to use this package is to import `FieldRendererHelper` class and to call `getFieldRenderer` method. This method returns proper field renderer (`JSX.Element`) based on field's type. It means that it will automatically select proper component that should be rendered in this or that field. This method also contains logic to correctly process field's value and get correct text to display (for example, Friendly Text for DateTime fields).
+The main scenario to use this package is to import `FieldRendererHelper` class and to call `getFieldRenderer` method. This method returns a Promise with a proper field renderer (`Promise<JSX.Element>`) based on field's type. It means that it will automatically select proper component that should be rendered in this or that field. This method also contains logic to correctly process field's value and get correct text to display (for example, Friendly Text for DateTime fields).
+As the method returns `Promise` it should be called in one of React component lifecycle methods, for example, `componentWillMount` that will occur before `render`. The resulting field renderer could be saved in the element's state and used later in `render` method.
 Here is an example on how it can be used inside custom Field Customizer component (.tsx file):
 ```
+export interface IOotbFieldsState {
+  fieldRenderer?: JSX.Element;
+}
+
+//...
+
+@override
+  public componentWillMount() {
+    FieldRendererHelper.getFieldRenderer(this.props.value, {
+      className: this.props.className,
+      cssProps: this.props.cssProps
+    }, this.props.listItem, this.props.context).then(fieldRenderer => {
+      this.setState({
+        fieldRenderer: fieldRenderer
+      });
+    });
+  }
+
 public render(): React.ReactElement<{}> {
     return (
       <div className={styles.cell}>
-        {FieldRendererHelper.getFieldRenderer(this.props.value, {
-          className: this.props.className,
-          cssProps: this.props.cssProps
-        }, this.props.listItem, this.props.context)}
+        {this.state.fieldRenderer}
       </div>
     );
   }
@@ -69,8 +85,8 @@ Here is a list of Utilities classes and public methods that are included in the 
 <tbody>
 <tr>
 <td><code>FieldRenderer</code></td>
-<td><code>getFieldRenderer(fieldValue: any, props: IFieldRendererProps, listItem: ListItemAccessor, context: IContext): JSX.Element</code></td>
-<td>Returns <code>JSX.Element</code> with OOTB rendering and applied additional props.<br>
+<td><code>getFieldRenderer(fieldValue: any, props: IFieldRendererProps, listItem: ListItemAccessor, context: IContext): Promise&lt;JSX.Element&gt;</code></td>
+<td>Returns <code>Promise&lt;JSX.Element&gt;</code> with OOTB rendering and applied additional props.<br>
 Parameters<br>
 <code>fieldValue</code> - Value of the field<br>
 <code>props</code> - IFieldRendererProps (CSS classes and CSS styles)<br>
@@ -79,7 +95,7 @@ Parameters<br>
 </td>
 </tr>
 <tr>
-<td rowspan="5">
+<td rowspan="6">
 <code>GeneralHelper</code>
 </td>
 <td>
@@ -129,7 +145,17 @@ Parameters<br>
 </td>
 </tr>
 <tr>
-<td rowspan="7">
+<td>
+<code>isDefined(value: any): boolean</code>
+</td>
+<td>
+Checks if value is defined (not null and not undefined)<br>
+<code>value</code> - value
+</td>
+</tr>
+
+<tr>
+<td rowspan="5">
 <code>SPHelper</code>
 </td>
 <td>
@@ -143,48 +169,26 @@ Parameters<br>
 </tr>
 <tr>
 <td>
-<code>getFieldText(fieldValue: any, listItem: ListItemAccessor, context: IContext): string</code>
+<code>getFieldText(fieldValue: any, listItem: ListItemAccessor, context: IContext): Promise&lt;string&gt;</code>
 </td>
 <td>
-Gets Field's text<br>
+Asynchronously gets Field's text<br>
 Parameters<br>
 <code>fieldValue</code> - field value as it appears in Field Customizer's onRenderCell event
 <code>listItem</code> - List Item accessor
 <code>context</code> - Customizer's context
 </td>
 </tr>
-<tr>
-<td>
-<code>getFieldNameById(fieldId: string, returnStoredName: boolean = false): string</code>
-</td>
-<td>
-Returns Field's name by its ID<br>
-Parameters<br>
-<code>fieldId</code> - Field's ID<br>
-<code>returnStoredName</code> - true if needs to return RealFieldName
-</td>
 </tr>
 <tr>
 <td>
-<code>getFieldProperty(fieldId: string, propertyName: string): any</code>
+<code>getFieldProperty(fieldId: string, propertyName: string): Promise&lt;any&gt;</code>
 </td>
 <td>
-Gets property of the Field by Field's ID and Property Name<br>
+Asynchronously gets property of the Field by Field's ID and Property Name<br>
 Parameters<br>
 <code>fieldId</code> - Field's ID<br>
 <code>propertyName</code> - Property name<br>
-</td>
-</tr>
-<tr>
-<td>
-<code>getRowItemValueById(id: string, itemName: string): any</code>
-</td>
-<td>
-Gets column's value for the row by row's ID.<br>
-This method works with <code>g_listData</code> to be able to get such values as FriendlyDisplay text for Date, and more.<br>
-Parameters<br>
-<code>id</code> - row ID (item ID)<br>
-<code>itemName</code> - column name
 </td>
 </tr>
 <tr>
@@ -201,12 +205,12 @@ Parameters<br>
 </tr>
 <tr>
 <td>
-<code>getFieldSchemaXmlByInternalNameOrTitle(fieldName: string, listTitle: string, context: IContext): Promise&lt;string&gt;</code>
+<code>getFieldSchemaXmlById(fieldId: string, listTitle: string, context: IContext): Promise&lt;string&gt;</code>
 </td>
 <td>
-Gets SchemaXml for the field by List Title and Field Internal Name<br>
+Gets SchemaXml for the field by List Title and Field Id<br>
 Parameters<br>
-<code>fieldName</code> - Field's Internal Name<br>
+<code>fieldId</code> - Field's Id<br>
 <code>listTitle</code> - List Title<br>
 <code>context</code> - Customizer's context
 </td>
@@ -218,6 +222,12 @@ Parameters<br>
 The repository also contains Field Customizer to test the functionality
 ### Debug Url
 ?loadSPFX=true&debugManifestsFile=https://localhost:4321/temp/manifests.js&fieldCustomizers={"Percent":{"id":"57ebd944-98ed-43f9-b722-e959d6dac6ad"}}
+
+## Release Notes
+| Version | Description |
+| ------- | ----------- |
+| 1.0.4 | First stable release with all needed functionality |
+| 1.1.0 | `window.g_listData` reference is completely removed<br>`getFieldSchemaXmlByTitleOrInternalName` is replaced with `getFieldSchemaXmlById`<br>`FieldRenderer.getFieldRenderer` is now asynchronous and shouldn't be called in `render` method of Field Customizer |
 
 ## Contribution
 Please, feel free to report any bugs or improvements for the repo.
