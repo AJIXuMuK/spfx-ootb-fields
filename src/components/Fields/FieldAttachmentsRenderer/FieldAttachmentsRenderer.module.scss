@@ -1,0 +1,6 @@
+@import '../FieldCommon/FieldRenderer.module.scss';
+
+.container {
+    @extend .relative;
+    font-size: 16px;
+}

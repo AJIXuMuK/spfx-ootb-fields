@@ -6,6 +6,7 @@ export interface ISPField {
     Format?: string;
     RichText?: boolean;
     SchemaXml?: string;
+    LookupDisplayUrl?: string;
 }
 
 /**

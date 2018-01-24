@@ -47,7 +47,7 @@ export class SPHelper {
 
             switch (fieldType) {
                 case 'Note':
-                    SPHelper.getFieldProperty(field.id.toString(), "RichText", context).then(richText => {
+                    SPHelper.getFieldProperty(field.id.toString(), "RichText", context, false).then(richText => {
                         const isRichText: boolean = richText === 'TRUE';
                         if (isRichText) {
                             resolve(GeneralHelper.getTextFromHTML(strFieldValue));
@@ -88,7 +88,7 @@ export class SPHelper {
                     resolve(lookupTexts.join('\n'));
                     break;
                 case 'URL':
-                    SPHelper.getFieldProperty(field.id.toString(), 'Format', context).then(format => {
+                    SPHelper.getFieldProperty(field.id.toString(), 'Format', context, true).then(format => {
                         const isImage: boolean = format === 'Image';
                         if (isImage) {
                             resolve('');
@@ -132,8 +132,9 @@ export class SPHelper {
      * @param fieldId Field's ID
      * @param propertyName Property name
      * @param context SPFx context
+     * @param fromSchemaXml true if the field should be read from Field Schema Xml
      */
-    public static getFieldProperty(fieldId: string, propertyName: string, context: IContext): Promise<any> {
+    public static getFieldProperty(fieldId: string, propertyName: string, context: IContext, fromSchemaXml: boolean): Promise<any> {
         return new Promise<any>(resolve => {
             let loadedViewFields: { [viewId: string]: IFields } = SPHelper._getLoadedViewFieldsFromStorage();
             const viewId: string = SPHelper.getPageViewId(context);
@@ -163,13 +164,84 @@ export class SPHelper {
                 spfxContext: context
             });
 
-            sp.web.lists.getByTitle(context.pageContext.list.title).fields.getById(fieldId).select(propertyName).get().then(f => {
-                field[propertyName] = f[propertyName];
+            if (fromSchemaXml) {
+                SPHelper.getFieldSchemaXmlById(fieldId, context.pageContext.list.title, context).then(schemaXml => {
+                    let fieldValue: string;
+                    const xml: Document = GeneralHelper.parseXml(schemaXml);
+                    const fieldEls = xml.getElementsByTagName('Field');
+                    if (fieldEls.length) {
+                        const fieldEl = fieldEls[0];
+                        fieldValue = fieldEl.getAttribute(propertyName);
+                        if (!GeneralHelper.isDefined(fieldValue)) {
+                            fieldValue = fieldEl.textContent;
+                        }
+                    }
+                    if (!GeneralHelper.isDefined(fieldValue)) {
+                        fieldValue = '';
+                    }
+                    field[propertyName] = fieldValue;
+                    SPHelper._updateFieldInSessionStorage(field, context);
+                }, (error) => {
+                    resolve('');
+                });
+            }
+            else {
+                sp.web.lists.getByTitle(context.pageContext.list.title).fields.getById(fieldId).select(propertyName).get().then(f => {
+                    field[propertyName] = f[propertyName];
 
-                loadedViewFields[viewId][field.Id] = field;
+                    loadedViewFields[viewId][field.Id] = field;
 
-                SPHelper._updateSessionStorageLoadedViewFields(loadedViewFields);
-                resolve(field);
+                    SPHelper._updateSessionStorageLoadedViewFields(loadedViewFields);
+                    resolve(field);
+                }, (error) => {
+                    resolve('');
+                });
+            }
+        });
+    }
+
+    /**
+     * Asynchronously gets the Diplay Form Url for the Lookup field
+     * @param fieldId Field Id
+     * @param context SPFx Context
+     */
+    public static getLookupFieldListDispFormUrl(fieldId: string, context: IContext): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            let loadedViewFields: { [viewId: string]: IFields } = SPHelper._getLoadedViewFieldsFromStorage();
+            const viewId: string = SPHelper.getPageViewId(context);
+
+            if (!loadedViewFields) {
+                loadedViewFields = {};
+            }
+
+            if (!loadedViewFields[viewId]) {
+                loadedViewFields[viewId] = {};
+            }
+
+            let field: ISPField = loadedViewFields[viewId][fieldId];
+            if (!field) {
+                field = {
+                    Id: fieldId
+                };
+            }
+
+            if (GeneralHelper.isDefined(field.LookupDisplayUrl)) {
+                resolve(field.LookupDisplayUrl);
+                return;
+            }
+            sp.setup({
+                spfxContext: context
+            });
+            sp.web.lists.getByTitle(context.pageContext.list.title).fields.getById(fieldId).select('LookupWebId', 'LookupList').get().then(f => {
+                sp.site.openWebById(f.LookupWebId).then(openedWeb => {
+                    openedWeb.web.select('Url').get().then(w => {
+                        field.LookupDisplayUrl = `${w.Url}/_layouts/15/listform.aspx?PageType=4&ListId=${f.LookupList}`;
+                        SPHelper._updateFieldInSessionStorage(field, context);
+                        resolve(field.LookupDisplayUrl);
+                    }, (error) => {
+                        reject(error);
+                    });
+                });
             });
         });
     }
@@ -239,6 +311,8 @@ export class SPHelper {
 
                 SPHelper._updateSessionStorageLoadedViewFields(loadedViewFields);
                 resolve(f ? f.SchemaXml : '');
+            }, (error) => {
+                resolve('');
             });
         });
     }
@@ -254,6 +328,20 @@ export class SPHelper {
             viewIdQueryParam = `{${viewIdQueryParam}}`;
         }
         return viewIdQueryParam || context.pageContext.legacyPageContext.viewId;
+    }
+
+
+    private static _updateFieldInSessionStorage(field: ISPField, context: IContext): void {
+        let loadedViewFields: { [viewId: string]: IFields } = SPHelper._getLoadedViewFieldsFromStorage();
+        if (!loadedViewFields) {
+            loadedViewFields = {};
+        }
+        const viewId: string = SPHelper.getPageViewId(context);
+        if (!loadedViewFields[viewId]) {
+            loadedViewFields[viewId] = {};
+        }
+        loadedViewFields[viewId][field.Id] = field;
+        SPHelper._updateSessionStorageLoadedViewFields(loadedViewFields);
     }
 
     private static _updateSessionStorageLoadedViewFields(loadedViewFields: { [viewId: string]: IFields }): void {
