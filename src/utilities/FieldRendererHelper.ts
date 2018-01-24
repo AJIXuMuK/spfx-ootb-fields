@@ -1,24 +1,22 @@
 import * as React from 'react';
 import { ISPFieldLookupValue, ITerm, IPrincipal } from '../common/SPEntities';
-import TextRenderer from '../components/Fields/TextRenderer/TextRenderer';
-import DateRenderer from '../components/Fields/DateRenderer/DateRenderer';
+import FieldTextRenderer from '../components/Fields/FieldTextRenderer/FieldTextRenderer';
+import FieldDateRenderer from '../components/Fields/FieldDateRenderer/FieldDateRenderer';
 import { ListItemAccessor } from '@microsoft/sp-listview-extensibility';
 import { SPHelper } from './SPHelper';
-import TitleRenderer from '../components/Fields/TitleRenderer/TitleRenderer';
+import FieldTitleRenderer from '../components/Fields/FieldTitleRenderer/FieldTitleRenderer';
 import { SPField } from '@microsoft/sp-page-context';
 import { IContext } from '../common/Interfaces';
 import { GeneralHelper } from './GeneralHelper';
-import LookupRenderer, { ILookupClickEventArgs } from '../components/Fields/LookupRenderer/LookupRenderer';
+import FieldLookupRenderer, { IFieldLookupClickEventArgs } from '../components/Fields/FieldLookupRenderer/FieldLookupRenderer';
 import IFrameDialog from '../components/IFrameDialog/IFrameDialog';
-import UrlRenderer from '../components/Fields/UrlRenderer/UrlRenderer';
-import TaxonomyRenderer from '../components/Fields/TaxonomyRenderer/TaxonomyRenderer';
-import { IFieldRendererProps } from '../components/Fields/Common/IFieldRendererProps';
-import UserRenderer from '../components/Fields/UserRenderer/UserRenderer';
-import FileTypeRenderer from '../components/Fields/FileTypeRenderer/FileTypeRenderer';
-import AttachmentsRenderer from '../components/Fields/AttachmentsRenderer/AttachmentsRenderer';
-import NameRenderer from '../components/Fields/NameRenderer/NameRenderer';
-
-declare var SP: any;
+import FieldUrlRenderer from '../components/Fields/FieldUrlRenderer/FieldUrlRenderer';
+import FieldTaxonomyRenderer from '../components/Fields/FieldTaxonomyRenderer/FieldTaxonomyRenderer';
+import { IFieldRendererProps } from '../components/Fields/FieldCommon/IFieldRendererProps';
+import FieldUserRenderer from '../components/Fields/FieldUserRenderer/FieldUserRenderer';
+import FieldFileTypeRenderer from '../components/Fields/FieldFileTypeRenderer/FieldFileTypeRenderer';
+import FieldAttachmentsRenderer from '../components/Fields/FieldAttachmentsRenderer/FieldAttachmentsRenderer';
+import FieldNameRenderer from '../components/Fields/FieldNameRenderer/FieldNameRenderer';
 
 /**
  * Field Renderer Helper.
@@ -49,7 +47,7 @@ export class FieldRendererHelper {
                 case 'Computed':
                     const fieldStoredName: string = SPHelper.getStoredFieldName(fieldName);
                     if (fieldStoredName === 'Title') {
-                        resolve(React.createElement(TitleRenderer, {
+                        resolve(React.createElement(FieldTitleRenderer, {
                             text: fieldValueAsEncodedText,
                             isLink: fieldName === 'LinkTitle' || fieldName === 'LinkTitleNoMenu',
                             listId: listId,
@@ -60,14 +58,14 @@ export class FieldRendererHelper {
                     }
                     else if (fieldStoredName === 'DocIcon') {
                         const path: string = listItem.getValueByName('FileLeafRef');
-                        resolve(React.createElement(FileTypeRenderer, {
+                        resolve(React.createElement(FieldFileTypeRenderer, {
                             path: path,
                             isFolder: SPHelper.getRowItemValueByName(listItem, 'FSObjType') === '1',
                             ...props
                         }));
                     }
                     else if (fieldStoredName === 'FileLeafRef') {
-                        resolve(React.createElement(NameRenderer, {
+                        resolve(React.createElement(FieldNameRenderer, {
                             text: fieldValueAsEncodedText,
                             isLink: true,
                             filePath: SPHelper.getRowItemValueByName(listItem, 'FileRef'),
@@ -77,7 +75,7 @@ export class FieldRendererHelper {
                         }));
                     }
                     else if (fieldStoredName === 'URL') {
-                        resolve(React.createElement(UrlRenderer, {
+                        resolve(React.createElement(FieldUrlRenderer, {
                             isImageUrl: false,
                             url: fieldValue.toString(),
                             text: SPHelper.getRowItemValueByName(listItem, `URL.desc`) || fieldValueAsEncodedText,
@@ -85,7 +83,7 @@ export class FieldRendererHelper {
                         }));
                     }
                     else {
-                        resolve(React.createElement(TextRenderer, {
+                        resolve(React.createElement(FieldTextRenderer, {
                             text: fieldValueAsEncodedText,
                             isSafeForInnerHTML: false,
                             isTruncated: false,
@@ -97,7 +95,7 @@ export class FieldRendererHelper {
                 case 'Counter':
                 case 'Number':
                 case 'Currency':
-                    resolve(React.createElement(TextRenderer, {
+                    resolve(React.createElement(FieldTextRenderer, {
                         text: fieldValueAsEncodedText,
                         isSafeForInnerHTML: true,
                         isTruncated: false,
@@ -105,7 +103,7 @@ export class FieldRendererHelper {
                     }));
                     break;
                 case 'Note':
-                    SPHelper.getFieldProperty(field.id.toString(), "RichText", context).then(richText => {
+                    SPHelper.getFieldProperty(field.id.toString(), "RichText", context, false).then(richText => {
                         const isRichText: boolean = richText === 'TRUE';
                         let html: string = '';
 
@@ -117,7 +115,7 @@ export class FieldRendererHelper {
                         }
                         // text is truncated if its length is more that 255 symbols or it has more than 4 lines
                         let isTruncated: boolean = html.length > 255 || html.split(/\r|\r\n|\n|<br>/).length > 4;
-                        resolve(React.createElement(TextRenderer, {
+                        resolve(React.createElement(FieldTextRenderer, {
                             text: html,
                             isSafeForInnerHTML: true,
                             isTruncated: isTruncated,
@@ -127,17 +125,17 @@ export class FieldRendererHelper {
                     break;
                 case 'DateTime':
                     const friendlyDisplay: string = SPHelper.getRowItemValueByName(listItem, `${fieldName}.FriendlyDisplay`);
-                    resolve(React.createElement(DateRenderer, {
+                    resolve(React.createElement(FieldDateRenderer, {
                         text: friendlyDisplay ? GeneralHelper.getRelativeDateTimeString(friendlyDisplay) : fieldValueAsEncodedText,
                         ...props
                     }));
                     break;
                 case "Lookup":
                 case "LookupMulti":
-                    SPHelper.getFieldProperty(field.id.toString(), 'DispFormUrl', context).then(dispFormUrlValue => {
+                    SPHelper.getLookupFieldListDispFormUrl(field.id.toString(), context).then(dispFormUrlValue => {
                         const lookupValues = fieldValue as ISPFieldLookupValue[];
                         const dispFormUrl: string = dispFormUrlValue.toString();
-                        resolve(React.createElement(LookupRenderer, {
+                        resolve(React.createElement(FieldLookupRenderer, {
                             lookups: lookupValues,
                             dispFormUrl: dispFormUrl,
                             ...props
@@ -146,10 +144,10 @@ export class FieldRendererHelper {
 
                     break;
                 case 'URL':
-                    SPHelper.getFieldProperty(field.id.toString(), 'Format', context).then(format => {
+                    SPHelper.getFieldProperty(field.id.toString(), 'Format', context, true).then(format => {
                         const isImage: boolean = format === 'Image';
                         const text: string = SPHelper.getRowItemValueByName(listItem, `${fieldName}.desc`);
-                        resolve(React.createElement(UrlRenderer, {
+                        resolve(React.createElement(FieldUrlRenderer, {
                             isImageUrl: isImage,
                             url: fieldValue.toString(),
                             text: text,
@@ -159,28 +157,29 @@ export class FieldRendererHelper {
                     break;
                 case 'Taxonomy':
                 case 'TaxonomyFieldType':
+                case 'TaxonomyFieldTypeMulti':
                     const terms: ITerm[] = Array.isArray(fieldValue) ? <ITerm[]>fieldValue : <ITerm[]>[fieldValue];
-                    resolve(React.createElement(TaxonomyRenderer, {
+                    resolve(React.createElement(FieldTaxonomyRenderer, {
                         terms: terms,
                         ...props
                     }));
                     break;
                 case 'User':
                 case 'UserMulti':
-                    resolve(React.createElement(UserRenderer, {
+                    resolve(React.createElement(FieldUserRenderer, {
                         users: <IPrincipal[]>fieldValue,
                         context: context,
                         ...props
                     }));
                     break;
                 case 'Attachments':
-                    resolve(React.createElement(AttachmentsRenderer, {
+                    resolve(React.createElement(FieldAttachmentsRenderer, {
                         count: parseInt(fieldValue),
                         ...props
                     }));
                     break;
                 default:
-                    resolve(React.createElement(TextRenderer, {
+                    resolve(React.createElement(FieldTextRenderer, {
                         text: fieldValueAsEncodedText,
                         isSafeForInnerHTML: false,
                         isTruncated: false,

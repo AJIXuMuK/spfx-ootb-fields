@@ -63,16 +63,16 @@ All controls contain next common properties in React props object:
 
 | Control | Props | Fields Covered | Comments |
 | --- | --- | --- | --- |
-| AttachmentsRenderer | `count?: number` - amount of attachments | Attachments | Renders Clip icon if there are attachments for the current list item |
-| DateRenderer | `text?: string` - text to be rendered | Date and Time | Renders date and time value as simple text |
-| FileTypeRenderer | `path: string` - document path<br>`isFolder?: boolean` - true if the icon should be rendered for a folder, not file | DocIcon | Renders an icon based on the extension of the current document. Office UI Fabric icons font is used to render the icons |
-| LookupRenderer | `lookups: ISPFieldLookupValue[]` - lookup values<br>`dispFormUrl?: string` - url of Display form for the list that is referenced in the lookup<br>`onClick?: (args: ILookupClickEventArgs) => {}` - custom event handler of lookup item click. If not set the dialog with Display Form will be shown | Lookup (single and multi) | Renders each referenced value as a link on a separate line. Opens popup with Display Form when the link is clicked |
-| NameRenderer | `text?: string` - text to display<br>`isLink: boolean` - if the Name should be rendered as link<br>`filePath?: string` - path to the document<br>`isNew?: boolean` - true if the document is new<br>`hasPreview?: boolean` - true if the document type has preview (true by default)<br>`onClick?: (args: INameClickEventArgs) => {}` - custom handler for link click. If not set link click will lead to rendering document preview | Document's Name (FileLeafRef, LinkFilename, LinkFilenameNoMenu) | Renders document's name as a link. The link provides either preview (if it is available) or direct download. Additionally, new documents are marked with "Glimmer" icon |
-| TaxonomyRenderer | `terms: ITerm[]` - terms to display | Managed Metadata | Renders each term on a separate line |
-| TextRenderer | `text?: string` - text to display<br>`isSafeForInnerHTML?: boolean` - true if props.text can be inserted as innerHTML of the component<br>`isTruncated?: boolean` - true if the text should be truncated | Single line of text; Multiple lines of text; Choice (single and multi); Yes/No; Integer; Counter; Number; Currency; also used as a default renderer for not implemented fields | Renders field's value as a simple text or HTML |
-| TitleRenderer | `text?: string` - text to display<br>`isLink?: boolean` - true if the Title should be rendered as link<br>`baseUrl?: string` - web url<br>`listId?: string` - list id<br>`id?: number` - item id<br>`onClick?: (args: ITitleClickEventArgs) => {}` - custom title click event handler. If not set Display form for the item will be displayed | List Item's Title (Title, LinkTitleNoMenu, LinkTitle) | The control renders title either as a simple text or as a link on the Dislpay Form. Additional actions like Share and Context Menu are not implemented |
-| UrlRenderer | `text?: string` - text to display<br>`url?: string` - url<br>`isImageUrl?: boolean` - true if the field should be rendered as an image | Hyperlink or Image; URL field from Links List | Renders either link or image |
-| UserRenderer | `users?: IPrincipal[]` - users/groups to be displayed<br>`context: IContext` - customizer's context | People and Group | Renders each referenced user/group as a link on a separate line. Hovering the link for users (not groups) leads to opening of Persona control. |
+| FieldAttachmentsRenderer | `count?: number` - amount of attachments | Attachments | Renders Clip icon if there are attachments for the current list item |
+| FieldDateRenderer | `text?: string` - text to be rendered | Date and Time | Renders date and time value as simple text |
+| FieldFileTypeRenderer | `path: string` - document path<br>`isFolder?: boolean` - true if the icon should be rendered for a folder, not file | DocIcon | Renders an icon based on the extension of the current document. Office UI Fabric icons font is used to render the icons |
+| FieldLookupRenderer | `lookups: ISPFieldLookupValue[]` - lookup values<br>`dispFormUrl?: string` - url of Display form for the list that is referenced in the lookup<br>`onClick?: (args: ILookupClickEventArgs) => {}` - custom event handler of lookup item click. If not set the dialog with Display Form will be shown | Lookup (single and multi) | Renders each referenced value as a link on a separate line. Opens popup with Display Form when the link is clicked |
+| FieldNameRenderer | `text?: string` - text to display<br>`isLink: boolean` - if the Name should be rendered as link<br>`filePath?: string` - path to the document<br>`isNew?: boolean` - true if the document is new<br>`hasPreview?: boolean` - true if the document type has preview (true by default)<br>`onClick?: (args: INameClickEventArgs) => {}` - custom handler for link click. If not set link click will lead to rendering document preview | Document's Name (FileLeafRef, LinkFilename, LinkFilenameNoMenu) | Renders document's name as a link. The link provides either preview (if it is available) or direct download. Additionally, new documents are marked with "Glimmer" icon |
+| FieldTaxonomyRenderer | `terms: ITerm[]` - terms to display | Managed Metadata | Renders each term on a separate line |
+| FieldTextRenderer | `text?: string` - text to display<br>`isSafeForInnerHTML?: boolean` - true if props.text can be inserted as innerHTML of the component<br>`isTruncated?: boolean` - true if the text should be truncated | Single line of text; Multiple lines of text; Choice (single and multi); Yes/No; Integer; Counter; Number; Currency; also used as a default renderer for not implemented fields | Renders field's value as a simple text or HTML |
+| FieldTitleRenderer | `text?: string` - text to display<br>`isLink?: boolean` - true if the Title should be rendered as link<br>`baseUrl?: string` - web url<br>`listId?: string` - list id<br>`id?: number` - item id<br>`onClick?: (args: ITitleClickEventArgs) => {}` - custom title click event handler. If not set Display form for the item will be displayed | List Item's Title (Title, LinkTitleNoMenu, LinkTitle) | The control renders title either as a simple text or as a link on the Dislpay Form. Additional actions like Share and Context Menu are not implemented |
+| FieldUrlRenderer | `text?: string` - text to display<br>`url?: string` - url<br>`isImageUrl?: boolean` - true if the field should be rendered as an image | Hyperlink or Image; URL field from Links List | Renders either link or image |
+| FieldUserRenderer | `users?: IPrincipal[]` - users/groups to be displayed<br>`context: IContext` - customizer's context | People and Group | Renders each referenced user/group as a link on a separate line. Hovering the link for users (not groups) leads to opening of Persona control. |
 
 ## Utilities Classes
 Here is a list of Utilities classes and public methods that are included in the package and could be also helpful:
@@ -95,7 +95,7 @@ Parameters<br>
 </td>
 </tr>
 <tr>
-<td rowspan="6">
+<td rowspan="7">
 <code>GeneralHelper</code>
 </td>
 <td>
@@ -153,9 +153,18 @@ Checks if value is defined (not null and not undefined)<br>
 <code>value</code> - value
 </td>
 </tr>
+<tr>
+<td>
+<code>parseXml(xmlString: string): Document</code>
+</td>
+<td>
+Creates Document element based on Xml string<br>
+<code>xmlString</code> - XML string to parse
+</td>
+</tr>
 
 <tr>
-<td rowspan="5">
+<td rowspan="7">
 <code>SPHelper</code>
 </td>
 <td>
@@ -182,13 +191,26 @@ Parameters<br>
 </tr>
 <tr>
 <td>
-<code>getFieldProperty(fieldId: string, propertyName: string): Promise&lt;any&gt;</code>
+<code>getFieldProperty(fieldId: string, propertyName: string, context: IContext, fromSchemaXml: boolean): Promise&lt;any&gt;</code>
 </td>
 <td>
 Asynchronously gets property of the Field by Field's ID and Property Name<br>
 Parameters<br>
 <code>fieldId</code> - Field's ID<br>
 <code>propertyName</code> - Property name<br>
+<code>context</code> - SPFx context<br>
+<code>fromSchemaXml</code> - true if the field should be read from Field Schema Xml
+</td>
+</tr>
+<tr>
+<td>
+<code>getLookupFieldListDispFormUrl(fieldId: string, context: IContext): Promise&lt;any&gt;</code>
+</td>
+<td>
+Asynchronously gets the Diplay Form Url for the Lookup field<br>
+Parameters<br>
+<code>fieldId</code> - Field's ID<br>
+<code>context</code> - SPFx context<br>
 </td>
 </tr>
 <tr>
@@ -215,6 +237,16 @@ Parameters<br>
 <code>context</code> - Customizer's context
 </td>
 </tr>
+<tr>
+<td>
+<code>getPageViewId(context: IContext): string</code>
+</td>
+<td>
+Gets correct view id from the page<br>
+Parameters<br>
+<code>context</code> - Customizer's context
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -228,6 +260,7 @@ The repository also contains Field Customizer to test the functionality
 | ------- | ----------- |
 | 1.0.4 | First stable release with all needed functionality |
 | 1.1.0 | `window.g_listData` reference is completely removed<br>`SPHelper.getFieldSchemaXmlByTitleOrInternalName` is replaced with `SPHelper.getFieldSchemaXmlById`<br>`FieldRenderer.getFieldRenderer` is now asynchronous and shouldn't be called in `render` method of Field Customizer |
+| 1.2.0 | All Field Controls names were prefixed with `Field`. As example, `FieldDateRenderer` instead of `DateRenderer`<br>Hyperlink or image rendering in Image mode is fixed<br>Lookup item display dialog is fixed |
 
 ## Contribution
 Please, feel free to report any bugs or improvements for the repo.
