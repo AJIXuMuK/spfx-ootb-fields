@@ -1,5 +1,7 @@
 # spfx-ootb-fields
 
+**IMPORTANT UPDATE:** this package was included in [PnP React Controls](https://www.npmjs.com/package/@pnp/spfx-controls-react) package. Please, use PnP React Controls to get latest and greatest of Fields Controls as well.
+
 This repository contains a set of React components that can be used in SPFx Field Customizers to provide rendering of the fields similar to out of the box experience. Additional benefit is ability to set custom css classes and styles to the component.
 Related UserVoice requests:<br>
 [https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls](https://sharepoint.uservoice.com/forums/329220-sharepoint-dev-platform/suggestions/18810637-access-to-re-use-modern-field-render-controls)<br>
